@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="consumerBatchProperties" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="bootstrap.servers" value="127.0.0.1:9092"/>
+                <entry key="group.id" value="kcd-batch"/>
+                <entry key="max.poll.records" value="100"/>
+                <entry key="enable.auto.commit" value="false"/>
+                <entry key="auto.offset.reset" value="earliest"/>
+                <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+                <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!--
+        consumerFactory
+    -->
+    <bean id="consumerBatchFactory" class="org.springframework.kafka.core.DefaultKafkaConsumerFactory">
+        <constructor-arg ref="consumerBatchProperties"/>
+    </bean>
+
+    <bean id="customBatchKafkaConsumerListener" class="com.lim.kafka.CustomKafkaConsumerListener"/>
+
+    <bean id="containerProperties" class="org.springframework.kafka.listener.config.ContainerProperties">
+        <constructor-arg name="topics">
+            <list>
+                <value>alarm</value>
+            </list>
+        </constructor-arg>
+        <property name="pollTimeout" value="3000"/>
+        <property name="ackMode" value="MANUAL_IMMEDIATE"/>
+        <property name="messageListener" ref="customBatchKafkaConsumerListener"/>
+    </bean>
+
+    <bean id="messageListenerContainer" class="org.springframework.kafka.listener.ConcurrentMessageListenerContainer"
+          init-method="doStart">
+        <constructor-arg ref="consumerBatchFactory"/>
+        <constructor-arg ref="containerProperties"/>
+        <property name="concurrency" value="3"/>
+    </bean>
+</beans>
