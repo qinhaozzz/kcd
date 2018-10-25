@@ -1,6 +1,7 @@
 package com.lim.kafka;
 
 import com.alibaba.fastjson.JSONObject;
+import com.lim.bean.Rate;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,11 @@ import java.util.Map;
  */
 public class MessageUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(MessageUtil.class);
-    private static final String SIGN_SPACE = " ";
-    public static final String SIGN = "message";
+    private static final String SPACE_SIGN = " ";
+    private static final String LINE_SIGN = "\\|";
+    private static final String JSON_KEY = "message";
+    private static final String RATE_KEY = "SysFlag|601-201|";
+    private static final String SEARCH_KEY = "3008|601|201|";
 
     /**
      * MONITOR: 2018-10-19 16:10:10 [7624393] [100000000] [z_lrm.c:446] 3008|201|201|1111|2222
@@ -27,12 +30,12 @@ public class MessageUtil {
         records.forEach(record ->
                 {
                     String val = record.value();
-                    if (val.contains("3008|601|201|")) {
-//                        JSONObject jsonObject = JSONObject.parseObject(record.value());
-//                        if (jsonObject.containsKey(SIGN)) {
-//                            String mess = jsonObject.getString("message");
-//                            result.add(mess);
-//                        }
+                    if (val.contains(SEARCH_KEY)) {
+                        JSONObject jsonObject = JSONObject.parseObject(record.value());
+                        if (jsonObject.containsKey(JSON_KEY)) {
+                            String mess = jsonObject.getString(JSON_KEY);
+                            result.add(mess);
+                        }
                         result.add(val);
                     }
                 }
@@ -41,17 +44,16 @@ public class MessageUtil {
     }
 
 
-    public static void  result(List<String> list, Map<String, CustomBatchMessageListener.Rate> map) {
+    public static void result(List<String> list, Map<String, Rate> map) {
         for (String mess : list) {
-            String[] splitBySpace = mess.split(SIGN_SPACE);
+            String[] splitBySpace = mess.split(SPACE_SIGN);
             String nums = splitBySpace[splitBySpace.length - 1];
-            String[] splitBySign = nums.split("\\|");
-            CustomBatchMessageListener.Rate rate = map.get("SysFlag|601-201|");
+            String[] splitBySign = nums.split(LINE_SIGN);
+            Rate rate = map.get(RATE_KEY);
             rate.setMaxSend(rate.getMaxSend() > (Integer.parseInt(splitBySign[3]) - rate.getSend()) ? rate.getMaxSend() : (Integer.parseInt(splitBySign[3]) - rate.getSend()));
             rate.setMaxReceive(rate.getMaxReceive() > (Integer.parseInt(splitBySign[4]) - rate.getReceive()) ? rate.getMaxReceive() : (Integer.parseInt(splitBySign[4]) - rate.getMaxReceive()));
             rate.setSend(Integer.parseInt(splitBySign[3]));
             rate.setReceive(Integer.parseInt(splitBySign[4]));
-            map.put("SysFlag|601-201|", rate);
         }
     }
 }
