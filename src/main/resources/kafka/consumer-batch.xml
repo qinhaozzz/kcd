@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        1. consumerProperties
+    -->
+    <bean id="batchConsumerProperties" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="bootstrap.servers" value="180.2.35.216:9092"/>
+                <entry key="group.id" value="kcd-batch"/>
+                <entry key="enable.auto.commit" value="true"/>
+                <entry key="max.poll.records" value="1000"/>
+                <!--<entry key="fetch.min.bytes" value="524288000"/>-->
+                <!--<entry key="fetch.max.bytes" value="524288000"/>-->
+                <!--<entry key="max.partition.fetch.bytes" value="3000000"/>-->
+                <!--<entry key="fetch.max.wait.ms" value="3000"/>-->
+                <entry key="auto.offset.reset" value="earliest"/>
+                <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+                <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!--
+        2. consumerFactory
+    -->
+    <bean id="batchConsumerFactory" class="org.springframework.kafka.core.DefaultKafkaConsumerFactory">
+        <constructor-arg ref="batchConsumerProperties"/>
+    </bean>
+
+    <!--
+       3. 不需确认的批量消息监听器
+    -->
+    <bean id="batchMessageListener" class="com.lim.kafka.CustomBatchMessageListener"/>
+
+
+    <bean id="batchContainerProperties" class="org.springframework.kafka.listener.config.ContainerProperties">
+        <constructor-arg name="topics">
+            <list>
+                <value>abcd</value>
+            </list>
+        </constructor-arg>
+        <property name="messageListener" ref="batchMessageListener"/>
+    </bean>
+
+
+    <bean id="batchMessageListenerContainer"
+          class="org.springframework.kafka.listener.ConcurrentMessageListenerContainer" init-method="doStart">
+        <constructor-arg ref="batchConsumerFactory"/>
+        <constructor-arg ref="batchContainerProperties"/>
+        <property name="concurrency" value="10"/>
+    </bean>
+</beans>

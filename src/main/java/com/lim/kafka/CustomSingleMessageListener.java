@@ -8,12 +8,12 @@ import org.springframework.kafka.listener.MessageListener;
 /**
  * @author qinhao
  */
-public class CustomKafkaConsumerListener implements MessageListener<String, String> {
+public class CustomSingleMessageListener implements MessageListener<String, String> {
 
-    private final Logger logger = LoggerFactory.getLogger(CustomKafkaConsumerListener.class);
+    private final Logger logger = LoggerFactory.getLogger(CustomSingleMessageListener.class);
 
-    public CustomKafkaConsumerListener() {
-        logger.info("customKafkaConsumerListener initial...");
+    public CustomSingleMessageListener() {
+        logger.info("CustomSingleMessageListener initial...");
     }
 
     @Override
