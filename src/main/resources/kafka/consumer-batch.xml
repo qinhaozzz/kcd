@@ -13,10 +13,10 @@
                 <entry key="group.id" value="kcd-batch"/>
                 <entry key="enable.auto.commit" value="true"/>
                 <entry key="max.poll.records" value="1000"/>
-                <!--<entry key="fetch.min.bytes" value="524288000"/>-->
-                <!--<entry key="fetch.max.bytes" value="524288000"/>-->
-                <!--<entry key="max.partition.fetch.bytes" value="3000000"/>-->
-                <!--<entry key="fetch.max.wait.ms" value="3000"/>-->
+                <entry key="fetch.min.bytes" value="52428800"/>
+                <!--<entry key="fetch.max.bytes" value="52428800"/>-->
+                <!--<entry key="max.partition.fetch.bytes" value="1024000"/>-->
+                <entry key="fetch.max.wait.ms" value="5000"/>
                 <entry key="auto.offset.reset" value="earliest"/>
                 <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
                 <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
@@ -40,7 +40,7 @@
     <bean id="batchContainerProperties" class="org.springframework.kafka.listener.config.ContainerProperties">
         <constructor-arg name="topics">
             <list>
-                <value>abcd</value>
+                <value>3008</value>
             </list>
         </constructor-arg>
         <property name="messageListener" ref="batchMessageListener"/>

@@ -21,7 +21,6 @@ public class CustomBatchMessageListener implements BatchMessageListener<String, 
     public CustomBatchMessageListener() {
         logger.info("CustomBatchMessageListener initial...");
         buffer = new ConcurrentHashMap<>();
-        buffer.put("SysFlag|601-201|", new Rate());
     }
 
     /**
@@ -30,12 +29,12 @@ public class CustomBatchMessageListener implements BatchMessageListener<String, 
      */
     @Override
     public void onMessage(List<ConsumerRecord<String, String>> records) {
-        long start = System.currentTimeMillis();
-        MessageUtil.result(MessageUtil.parse(records), buffer);
-        long end = System.currentTimeMillis();
-        logger.info("used time: " + (end - start));
-        logger.info("count: " + records.size());
-        logger.info("buffer: " + buffer);
+//        long start = System.currentTimeMillis();
+//        MessageUtil.parse(records, buffer);
+//        MessageUtil.result(buffer);
+//        long end = System.currentTimeMillis();
+//        logger.info("used time: " + (end - start));
+//        logger.info("count: " + records.size());
     }
 
 }

@@ -9,10 +9,10 @@
     <bean id="ackBatchConsumerProperties" class="java.util.HashMap">
         <constructor-arg>
             <map>
-                <entry key="bootstrap.servers" value="127.0.0.1:9092"/>
+                <entry key="bootstrap.servers" value="180.2.35.216:9092"/>
                 <entry key="group.id" value="kcd-ackBatch"/>
                 <entry key="enable.auto.commit" value="false"/>
-                <entry key="max.poll.records" value="5"/>
+                <entry key="max.poll.records" value="1000"/>
                 <entry key="auto.offset.reset" value="earliest"/>
                 <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
                 <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
@@ -36,7 +36,7 @@
     <bean id="ackBatchContainerProperties" class="org.springframework.kafka.listener.config.ContainerProperties">
         <constructor-arg name="topics">
             <list>
-                <value>test</value>
+                <value>3008</value>
             </list>
         </constructor-arg>
         <property name="messageListener" ref="ackBatchMessageListener"/>
@@ -44,9 +44,10 @@
     </bean>
 
 
-    <bean id="ackBatchMessageListenerContainer" class="org.springframework.kafka.listener.KafkaMessageListenerContainer"
-          init-method="doStart">
+    <bean id="ackBatchMessageListenerContainer"
+          class="org.springframework.kafka.listener.ConcurrentMessageListenerContainer" init-method="doStart">
         <constructor-arg ref="ackBatchConsumerFactory"/>
         <constructor-arg ref="ackBatchContainerProperties"/>
+        <property name="concurrency" value="5"/>
     </bean>
 </beans>

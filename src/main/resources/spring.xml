@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--<import resource="classpath:kafka/consumer-single.xml"/>-->
-    <import resource="classpath:kafka/consumer-batch.xml"/>
-    <!--<import resource="classpath:kafka/consumer-ackBatch.xml"/>-->
+    <!--<import resource="classpath:kafka/consumer-batch.xml"/>-->
+    <import resource="classpath:kafka/consumer-ackBatch.xml"/>
     <!--<import resource="classpath:kafka/consumer-ackSingle.xml"/>-->
 </beans>
