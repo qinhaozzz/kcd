@@ -10,9 +10,11 @@
         <constructor-arg>
             <map>
                 <entry key="bootstrap.servers" value="180.2.35.216:9092"/>
-                <entry key="group.id" value="kcd-ackBatch"/>
+                <entry key="group.id" value="kcd-ackBatch-redis"/>
                 <entry key="enable.auto.commit" value="false"/>
-                <entry key="max.poll.records" value="1000"/>
+                <entry key="heartbeat.interval.ms" value="6000"/>
+                <entry key="session.timeout.ms" value="20000"/>
+                <entry key="max.poll.records" value="100000"/>
                 <entry key="auto.offset.reset" value="earliest"/>
                 <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
                 <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
@@ -30,7 +32,8 @@
     <!--
        3. 不需确认的批量消息监听器
     -->
-    <bean id="ackBatchMessageListener" class="com.lim.kafka.CustomAckBatchMessageListener"/>
+    <!--<bean id="ackBatchMessageListener" class="com.lim.kafka.CustomAckBatchMessageListener"/>-->
+    <bean id="ackBatchMessageListener" class="com.lim.kafka.CustomAckBatchMessageListenerRedis"/>
 
 
     <bean id="ackBatchContainerProperties" class="org.springframework.kafka.listener.config.ContainerProperties">
@@ -48,6 +51,6 @@
           class="org.springframework.kafka.listener.ConcurrentMessageListenerContainer" init-method="doStart">
         <constructor-arg ref="ackBatchConsumerFactory"/>
         <constructor-arg ref="ackBatchContainerProperties"/>
-        <property name="concurrency" value="5"/>
+        <property name="concurrency" value="10"/>
     </bean>
 </beans>

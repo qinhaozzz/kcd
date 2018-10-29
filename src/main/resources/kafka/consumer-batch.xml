@@ -10,9 +10,9 @@
         <constructor-arg>
             <map>
                 <entry key="bootstrap.servers" value="180.2.35.216:9092"/>
-                <entry key="group.id" value="kcd-batch"/>
+                <entry key="group.id" value="kcd-batch-a"/>
                 <entry key="enable.auto.commit" value="true"/>
-                <entry key="max.poll.records" value="1000"/>
+                <entry key="max.poll.records" value="10000"/>
                 <entry key="fetch.min.bytes" value="52428800"/>
                 <!--<entry key="fetch.max.bytes" value="52428800"/>-->
                 <!--<entry key="max.partition.fetch.bytes" value="1024000"/>-->
@@ -51,6 +51,9 @@
           class="org.springframework.kafka.listener.ConcurrentMessageListenerContainer" init-method="doStart">
         <constructor-arg ref="batchConsumerFactory"/>
         <constructor-arg ref="batchContainerProperties"/>
-        <property name="concurrency" value="10"/>
+        <property name="concurrency" value="20"/>
+    </bean>
+
+    <bean id="myTime" class="com.lim.kafka.TimeCount" scope="singleton">
     </bean>
 </beans>

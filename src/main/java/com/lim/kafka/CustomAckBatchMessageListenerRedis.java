@@ -1,28 +1,27 @@
 package com.lim.kafka;
 
-import com.lim.bean.Rate;
-import com.lim.util.MultiThreadMessageUtil;
+import com.lim.util.MultiThreadMessageUtilRedis;
+import com.lim.util.RedisUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.listener.BatchAcknowledgingMessageListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author qinhao
  */
-public class CustomAckBatchMessageListener implements BatchAcknowledgingMessageListener<String, String> {
+//@Component
+public class CustomAckBatchMessageListenerRedis implements BatchAcknowledgingMessageListener<String, String> {
 
-    private final Logger logger = LoggerFactory.getLogger(CustomAckBatchMessageListener.class);
-    private Map<String, Rate> buffer;
+    private final Logger logger = LoggerFactory.getLogger(CustomAckBatchMessageListenerRedis.class);
 
-    public CustomAckBatchMessageListener() {
-        buffer = new ConcurrentHashMap<>();
-    }
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * Invoked with data from kafka.
@@ -31,8 +30,7 @@ public class CustomAckBatchMessageListener implements BatchAcknowledgingMessageL
      */
     @Override
     public void onMessage(List<ConsumerRecord<String, String>> records, Acknowledgment acknowledgment) {
-        MultiThreadMessageUtil.parse(buffer, records);
+        MultiThreadMessageUtilRedis.parse(redisUtil, records);
         acknowledgment.acknowledge();
-        logger.info("buffer: {}", buffer);
     }
 }

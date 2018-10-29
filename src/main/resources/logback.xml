@@ -10,6 +10,8 @@
         </encoder>
     </appender>
 
+    <logger name="org.apache.kafka.clients.consumer" level="OFF"></logger>
+
     <!-- 模拟运行时修改成DEBUG,上线时修改成INFO -->
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>

@@ -9,9 +9,11 @@
     <bean id="ackSingleConsumerProperties" class="java.util.HashMap">
         <constructor-arg>
             <map>
-                <entry key="bootstrap.servers" value="127.0.0.1:9092"/>
-                <entry key="group.id" value="kcd-ackSingle"/>
+                <entry key="bootstrap.servers" value="180.2.35.216:9092"/>
+                <entry key="group.id" value="kcd-ackSingle-test"/>
                 <entry key="enable.auto.commit" value="false"/>
+                <entry key="session.timeout.ms" value="30000"/>
+                <entry key="heartbeat.interval.ms" value="10000"/>
                 <entry key="auto.offset.reset" value="earliest"/>
                 <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
                 <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
@@ -37,7 +39,7 @@
     <bean id="ackSingleContainerProperties" class="org.springframework.kafka.listener.config.ContainerProperties">
         <constructor-arg name="topics">
             <list>
-                <value>test</value>
+                <value>3008</value>
             </list>
         </constructor-arg>
         <property name="messageListener" ref="ackSingleMessageListener"/>
@@ -47,8 +49,8 @@
     <!--
         5. KafkaMessageListenerContainer
     -->
-    <bean id="ackSingleMessageListenerContainer" class="org.springframework.kafka.listener.KafkaMessageListenerContainer"
-          init-method="doStart">
+    <bean id="ackSingleMessageListenerContainer"
+          class="org.springframework.kafka.listener.KafkaMessageListenerContainer" init-method="doStart">
         <constructor-arg ref="ackSingleConsumerFactory"/>
         <constructor-arg ref="ackSingleContainerProperties"/>
     </bean>

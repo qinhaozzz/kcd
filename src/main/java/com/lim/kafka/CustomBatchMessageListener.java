@@ -13,10 +13,13 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author qinhao
  */
+//@Component
 public class CustomBatchMessageListener implements BatchMessageListener<String, String> {
 
     private final Logger logger = LoggerFactory.getLogger(CustomBatchMessageListener.class);
     private Map<String, Rate> buffer;
+
+
 
     public CustomBatchMessageListener() {
         logger.info("CustomBatchMessageListener initial...");
@@ -29,12 +32,10 @@ public class CustomBatchMessageListener implements BatchMessageListener<String, 
      */
     @Override
     public void onMessage(List<ConsumerRecord<String, String>> records) {
-//        long start = System.currentTimeMillis();
-//        MessageUtil.parse(records, buffer);
-//        MessageUtil.result(buffer);
-//        long end = System.currentTimeMillis();
-//        logger.info("used time: " + (end - start));
-//        logger.info("count: " + records.size());
+        long start = System.currentTimeMillis();
+
+        long end = System.currentTimeMillis();
+        logger.info("buffer: " + buffer);
     }
 
 }
